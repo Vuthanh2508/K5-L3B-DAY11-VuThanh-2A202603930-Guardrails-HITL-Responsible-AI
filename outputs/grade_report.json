@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T09:25:08.153833+00:00",
+  "generated_at": "2026-11-20T11:00:45.737011+00:00",
   "submission_dir": "C:\\HUST\\VIN\\lab11\\K5-L3B-DAY11-VuThanh-2A202603930-Guardrails-HITL-Responsible-AI",
   "technical_failure": false,
   "packaging": {
@@ -47,7 +47,7 @@
   },
   "public_tests": {
     "returncode": 0,
-    "stdout": "..........                                                               [100%]\n10 passed in 1.40s\n",
+    "stdout": "..........                                                               [100%]\n10 passed in 1.37s\n",
     "stderr": "",
     "technical_failure": false
   },

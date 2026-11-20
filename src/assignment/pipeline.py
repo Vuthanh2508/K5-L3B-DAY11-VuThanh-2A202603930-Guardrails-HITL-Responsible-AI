@@ -120,19 +120,15 @@ async def run_assignment_suite(pipeline) -> dict:
                     monitor.blocked_requests += 1
                 return {"input": prompt, "blocked": True, "layer": "input_guardrail", "response_preview": preview}
 
-        # Model & Output Guardrail (Gọi trực tiếp Liquid AI API với LIQUID_API_KEY)
-        import os
+        # Model & Output Guardrail (Gọi OpenRouter liquid/lfm-3-1.7b)
+        from core.config import blue_client_kwargs, get_blue_model
         from openai import OpenAI
         from agents.agent import BLUE_INSTRUCTION
 
-        liquid_key = os.environ.get("LIQUID_API_KEY", "").strip()
-        liquid_base_url = os.environ.get("LIQUID_BASE_URL", "https://api.liquid.ai/openai/v1").strip()
-        liquid_model = os.environ.get("LIQUID_MODEL", "lfm3-1.7b").strip()
-
         try:
-            client = OpenAI(api_key=liquid_key, base_url=liquid_base_url)
+            client = OpenAI(**blue_client_kwargs())
             completion = client.chat.completions.create(
-                model=liquid_model,
+                model=get_blue_model(),
                 messages=[
                     {"role": "system", "content": BLUE_INSTRUCTION},
                     {"role": "user", "content": prompt},

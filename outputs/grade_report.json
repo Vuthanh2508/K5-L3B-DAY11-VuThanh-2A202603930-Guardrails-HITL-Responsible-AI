@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-20T08:12:53.584461+00:00",
-  "submission_dir": "C:\\HUST\\VIN\\lab11\\K5-L3-LAB-Day11-Guardrails-HITL-Responsible-AI",
+  "generated_at": "2026-11-20T08:56:59.874156+00:00",
+  "submission_dir": "C:\\HUST\\VIN\\lab11\\K5-L3B-DAY11-VuThanh-2A202603930-Guardrails-HITL-Responsible-AI",
   "technical_failure": false,
   "packaging": {
     "ok": true,
@@ -47,7 +47,7 @@
   },
   "public_tests": {
     "returncode": 0,
-    "stdout": "..........                                                               [100%]\n10 passed in 1.91s\n",
+    "stdout": "..........                                                               [100%]\n10 passed in 1.33s\n",
     "stderr": "",
     "technical_failure": false
   },

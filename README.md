@@ -162,3 +162,22 @@ pip install -r requirements.txt
 Rồi mở [`CHECKPOINTS.md`](CHECKPOINTS.md) và làm lần lượt Checkpoint 1 → 5.
 
 Nộp theo [`SUBMISSION.md`](SUBMISSION.md) · Quy định: [`RULES.md`](RULES.md).
+
+## 4.Thông tin học viên
+- **Họ và tên:** Vũ Thành
+- **MSSV:** 2A202603930
+- **Lớp:** L3B
+- **Repository:** https://github.com/Vuthanh2508/K5-L3B-DAY11-VuThanh-2A202603930-Guardrails-HITL-Responsible-AI
+## 5.Hướng dẫn chạy lại
+```powershell
+# 1. Kích hoạt môi trường ảo
+.\.venv\Scripts\Activate.ps1
+# 2. Chạy phòng thủ (Checkpoint 2 & 3)
+python src/main.py --part 2
+python src/main.py --part 3
+# 3. Chạy tấn công Red Team (Checkpoint 4)
+python src/main.py --part 4
+# 4. Tự kiểm tra & sinh báo cáo (Checkpoint 5)
+pytest tests/public -q
+python scripts/grade.py --submission-dir . --out outputs/grade_report.json
+```

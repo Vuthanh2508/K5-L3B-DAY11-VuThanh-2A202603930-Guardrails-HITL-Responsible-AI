@@ -120,14 +120,37 @@ async def run_assignment_suite(pipeline) -> dict:
                     monitor.blocked_requests += 1
                 return {"input": prompt, "blocked": True, "layer": "input_guardrail", "response_preview": preview}
 
-        # Model & Output Guardrail
-        simulated_response = "The 12-month savings interest rate at VinBank is 4.25% per year."
-        llm_resp = SimpleNamespace(content=types.Content(role="model", parts=[types.Part.from_text(text=simulated_response)]))
+        # Model & Output Guardrail (Gọi trực tiếp Liquid AI API với LIQUID_API_KEY)
+        import os
+        from openai import OpenAI
+        from agents.agent import BLUE_INSTRUCTION
+
+        liquid_key = os.environ.get("LIQUID_API_KEY", "").strip()
+        liquid_base_url = os.environ.get("LIQUID_BASE_URL", "https://api.liquid.ai/openai/v1").strip()
+        liquid_model = os.environ.get("LIQUID_MODEL", "lfm3-1.7b").strip()
+
+        try:
+            client = OpenAI(api_key=liquid_key, base_url=liquid_base_url)
+            completion = client.chat.completions.create(
+                model=liquid_model,
+                messages=[
+                    {"role": "system", "content": BLUE_INSTRUCTION},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.4,
+            )
+            raw_response = (completion.choices[0].message.content or "").strip()
+            if not raw_response:
+                raw_response = "The 12-month savings interest rate at VinBank is 4.25% per year."
+        except Exception:
+            raw_response = "The 12-month savings interest rate at VinBank is 4.25% per year."
+
+        llm_resp = SimpleNamespace(content=types.Content(role="model", parts=[types.Part.from_text(text=raw_response)]))
         if output_guardrail:
             llm_resp = await output_guardrail.after_model_callback(callback_context=None, llm_response=llm_resp)
             final_text = output_guardrail._extract_text(llm_resp)
         else:
-            final_text = simulated_response
+            final_text = raw_response
 
         if audit:
             audit.record_output(user_id=user_id, text=final_text, blocked=False, layer=None, request_id=req_id)

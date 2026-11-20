@@ -47,6 +47,11 @@ def content_filter(response: str) -> dict:
         # - National ID (CMND/CCCD): r"\b\d{9}\b|\b\d{12}\b"
         # - API key pattern: r"sk-[a-zA-Z0-9-]+"
         # - Password pattern: r"password\s*[:=]\s*\S+"
+        "phone": r"(?:(?:\+84|0)(?:3|5|7|8|9)\d{8}|0\d{9,10})",
+        "email": r"[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}",
+        "national_id": r"\b\d{9}\b|\b\d{12}\b",
+        "api_key": r"sk-[a-zA-Z0-9_-]+",
+        "password": r"(?:password\s*[:=]\s*\S+|admin123)",
     }
 
     for name, pattern in PII_PATTERNS.items():
@@ -180,6 +185,12 @@ class OutputGuardrailPlugin(base_plugin.BasePlugin):
         #    - If unsafe: replace llm_response.content with a safe message
         #    - Increment self.blocked_count
         # 3. Return llm_response (possibly modified)
+        res = content_filter(response_text)
+        if not res["safe"]:
+            self.redacted_count += 1
+            llm_response.content = types.Content(
+                role="model",
+                parts=[types.Part.from_text(text=res["redacted"])],)
 
         return llm_response  # TODO: modify if needed
 
